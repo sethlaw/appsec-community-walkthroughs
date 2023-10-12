@@ -1,3 +1,6 @@
+---
+label: Home
+---
 
 ![](static/header.png)
 ## AppSec Community Walkthroughs
