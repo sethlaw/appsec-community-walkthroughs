@@ -1,0 +1,13 @@
+input: .
+output: .retype
+url: https://saintcon.org/com-appsec-community/walkthroughs/
+branding:
+  title: SaintCon AppSec Community
+  logo: static/logo.svg
+links:
+- text: SaintCon
+  link: https://saintcon.org/
+- text: AppSec Community
+  link: https://saintcon.org/com-appsec-community/
+footer:
+  copyright: "&copy; Copyright {{ year }}. All rights reserved."
