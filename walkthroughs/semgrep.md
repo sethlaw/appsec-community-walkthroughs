@@ -34,7 +34,7 @@ If this folder does not exist, clone vtm from GitHub using the command `git clon
 
 Now that we have the code and tool available, run a scan using the default rules from the Semgrep team as follows: 
 
-* `semgrep scan --config auto vtm`
+* `semgrep scan --config auto .`
 
 This will output something similar to the following after doing analysis on the source code files that exist in the targeted directory.
 
