@@ -1,12 +1,15 @@
 {
   "version": "3.5.0",
-  "created": "2023-10-12T17:43:10Z",
+  "created": "2023-10-21T21:38:18Z",
   "files": [
     {
       "path": ".nojekyll"
     },
     {
       "path": "404.html"
+    },
+    {
+      "path": "CNAME"
     },
     {
       "path": "index.html"
@@ -54,10 +57,23 @@
       "path": "robots.txt"
     },
     {
-      "path": "semgrep/index.html"
+      "path": "semgrep/index.html",
+      "old": true
     },
     {
       "path": "sitemap.xml.gz"
+    },
+    {
+      "path": "static/header.png"
+    },
+    {
+      "path": "static/logo.svg"
+    },
+    {
+      "path": "walkthroughs/sca/index.html"
+    },
+    {
+      "path": "walkthroughs/semgrep/index.html"
     }
   ]
 }
