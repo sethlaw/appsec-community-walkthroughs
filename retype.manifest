@@ -1,12 +1,72 @@
 {
   "version": "3.5.0",
-  "created": "2023-10-21T21:38:18Z",
+  "created": "2023-10-23T22:13:10Z",
   "files": [
     {
       "path": ".nojekyll"
     },
     {
       "path": "404.html"
+    },
+    {
+      "path": "built/404.html"
+    },
+    {
+      "path": "built/index.html"
+    },
+    {
+      "path": "built/resources/css/retype.css"
+    },
+    {
+      "path": "built/resources/fonts/inter-italic-latin-var.woff2"
+    },
+    {
+      "path": "built/resources/fonts/inter-roman-latin-var.woff2"
+    },
+    {
+      "path": "built/resources/js/config.js"
+    },
+    {
+      "path": "built/resources/js/lunr.js"
+    },
+    {
+      "path": "built/resources/js/prism.js"
+    },
+    {
+      "path": "built/resources/js/retype.js"
+    },
+    {
+      "path": "built/resources/js/search.json"
+    },
+    {
+      "path": "built/resources/lunr.js.license.txt"
+    },
+    {
+      "path": "built/resources/mermaid.js.license.txt"
+    },
+    {
+      "path": "built/resources/prism.js.license.txt"
+    },
+    {
+      "path": "built/resources/retype.js.license.txt"
+    },
+    {
+      "path": "built/resources/retype.license.txt"
+    },
+    {
+      "path": "built/robots.txt"
+    },
+    {
+      "path": "built/static/header.png"
+    },
+    {
+      "path": "built/static/logo.svg"
+    },
+    {
+      "path": "built/walkthroughs/sca/index.html"
+    },
+    {
+      "path": "built/walkthroughs/semgrep/index.html"
     },
     {
       "path": "CNAME"
@@ -70,10 +130,40 @@
       "path": "static/logo.svg"
     },
     {
+      "path": "static/zap/home-screen.png"
+    },
+    {
+      "path": "static/zap/hud-in-app.png"
+    },
+    {
+      "path": "static/zap/hud-menu-retake-tutorial.png"
+    },
+    {
+      "path": "static/zap/hud-menu.png"
+    },
+    {
+      "path": "static/zap/hud-start.png"
+    },
+    {
+      "path": "static/zap/manual-explore.png"
+    },
+    {
+      "path": "static/zap/session-persistence.png"
+    },
+    {
+      "path": "static/zap/startup.png"
+    },
+    {
       "path": "walkthroughs/sca/index.html"
     },
     {
       "path": "walkthroughs/semgrep/index.html"
+    },
+    {
+      "path": "walkthroughs/zap/index.html"
+    },
+    {
+      "path": "walkthroughs/zap/zaphud/index.html"
     }
   ]
 }
