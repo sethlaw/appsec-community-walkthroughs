@@ -11,7 +11,7 @@ Zap's HUD functionality is an overlay that provides access to tools you can use 
 
 Some of the benefits of using the HUD over one of the static scripts are:
 - First contact with a web application.  When you first encounter a web application you will not have existing scripts.  The HUD can help you do some basic analysis to determine what should be scripted specifically for the future.
-- Authentication.  Since ZAP is a proxy and the HUD is an overlay for sites running through that proxy you can use the dynamic assessment capabilities to manually authenticate, especially when authentication requres 2FA or the authentication information is too sensitive to leave in a script.
+- Authentication.  Since ZAP is a proxy and the HUD is an overlay for sites running through that proxy you can use the dynamic assessment capabilities to manually authenticate, especially when authentication requires 2FA or the authentication information is too sensitive to leave in a script.
 
 ### Zap HUD tutorial
 Zap HUD already has a good built-in tutorial for what features it supplies and some practices exercises on using various features it provides. 
