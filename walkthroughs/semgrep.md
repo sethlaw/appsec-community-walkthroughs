@@ -7,13 +7,13 @@ order: 100
 # Application Security Community Walkthrough
 ## Semgrep Walkthrough
 
-This tutorial will walkthrough the using the open-source version of [Semgrep Code](https://semgrep.dev/products/semgrep-code/), a `Fast, customizable, and developer-oriented SAST`. It will be run against an intentionally-vulnerable, task managament application, [VTM](https://github.com/redpointsec/vtm) that is used in training developers about secure coding topics.
+This tutorial will walkthrough using the open-source version of [Semgrep Code](https://semgrep.dev/products/semgrep-code/), a `Fast, customizable, and developer-oriented SAST`. You will have the chance to run Semgrep against an intentionally-vulnerable, task managament application, [VTM](https://github.com/redpointsec/vtm) that is used in training developers about secure coding topics.
 
 ## Step 1 - Setup
 
 Semgrep OSS is a command-line tool and requires a terminal to run. Open up a terminal window.
 
-Insure that semgrep is installed on the local system by running `which semgrep`.
+Confirm semgrep is installed on the local system by running `which semgrep`.
 
 ```
 % which semgrep
@@ -22,7 +22,7 @@ Insure that semgrep is installed on the local system by running `which semgrep`.
 
 If you get message `semgrep not found`, flag down a volunteer so they can correct the problem. You can also fix the problem by running `pip install semgrep`
 
-Now that we know semgrep is installed and available, open up a terminal window and make sure that the `vtm` source code is included in the current user's home folder:
+Now that we know semgrep is installed and available, open up a terminal window and make sure the `vtm` source code is included in the current user's home folder:
 
 ```
 cd vtm
@@ -36,7 +36,7 @@ Now that we have the code and tool available, run a scan using the default rules
 
 * `semgrep scan --config auto .`
 
-This will output something similar to the following after doing analysis on the source code files that exist in the targeted directory.
+This will run analysis on the source code files that exist in the targeted directory and output something similar to the following:
 
 ```
 ┌──── ○○○ ────┐
