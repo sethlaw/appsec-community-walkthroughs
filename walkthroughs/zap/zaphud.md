@@ -17,18 +17,29 @@ Some of the benefits of using the HUD over one of the static scripts are:
 Zap HUD already has a good built-in tutorial for what features it supplies and some practices exercises on using various features it provides. 
 
 Rather than a feature by feature walkthrough this walkthrough will be how to access that tutorial.
-Note that any flags in that tutorial are not part of the (Hacker's Challenge)[https://www.saintcon.org/con-hackerschallenge/]
 
-#### Manual Explore
-From the ZAP home screen, chose the option "manual explore".  This will take to to a screen such as this:
+#### Reset
+
+If you have taken the tutorial before or are on a shared computer where someone else has taken it before you will need to reset the tutorial by:
+
+1. Open the "Options" menu
+2. Select "HUD"
+3. Click "Reset tutorial task"
+
+![](/static/zap/Reset.png)
+
+#### Starting the tutorial
+
+##### Manual Explore
+From the ZAP Quick Start screen, choose the option "Manual explore".  This will take to to a screen such as this:
 ![](/static/zap/manual-explore.png)
 
-##### Setup
+
 
 ###### URL to Explore
 For URL to explore you will want to use the URL of a test site you have permission to access, never a third party or production site.
 
-Anything running on your local host, such as the [SAINTCON 2023 AppSec challenge app](https://appsec.saintcon.community/challenge) or [Juice Shop](https://owasp.org/www-project-juice-shop/), should be fine.
+Anything running on your local host, such as [Juice Shop](https://owasp.org/www-project-juice-shop/), should be fine.
 
 ###### Other Options
 Choose "Enable HUD".
@@ -39,13 +50,8 @@ We recommend one that allows test automation, such as Chrome.
 This will open up the Zap HUD:
 ![](/static/zap/HUD-start.png)
 
-##### Tutorial
-If you have never opened the HUD before you can select "Take the tutorial" rather than "Continue to your target".
+Select "Take the tutorial" rather than "Continue to your target".
 
-If you have taken the tutorial before or are on a shared computer where someone else has taken it before you can reset the tutorial by:
+This tutorial will walk you through the HUD and have you perform a couple of flag captures.  While the flags are not used in the Hacker's Challenge they are a good introduction into how to capture flags.
 
-Open the HUD settings
-![](/static/zap/HUD-menu.png)
 
-From here you can choose to reset the tutorial:
-![](/static/zap/HUD-menu-retake-tutorial.png)

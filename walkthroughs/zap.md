@@ -9,10 +9,13 @@ order: 100
 ## Zap
 [Zap](https://www.zaproxy.org/) is a Dynamic Application Security Testing (DAST) tool for web applications.  It allows for both scripted and interactive scanning.
 
-Zap was originally an [OWASP](https://owasp.org/) project.  It is currently in transition to be part of the [Software Security Project](https://softwaresecurityproject.org/blog/welcoming-zap-to-the-software-security-project/)
+Zap was originally an [OWASP](https://owasp.org/) project.  When Checkmarx [hired all of the lead developers](https://www.zaproxy.org/blog/2024-09-24-zap-has-joined-forces-with-checkmarx/) it has been rebranded "ZAP by Checkmarx".
+
+### Installing
+You can download ZAP from [www.zaproxy.org](www.zaproxy.org) and requires Java 11 or higer to run.
 
 ### Starting up
-when you start ZAP you will get a screen like this:
+When you start ZAP you will get a screen like this:
 ![](/static/zap/startup.png)
 
 For now let's not persist our session:
