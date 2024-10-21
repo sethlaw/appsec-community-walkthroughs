@@ -11,7 +11,7 @@ order: 100
 Source composition analysis (SCA) tools scan third-party libraries used in a project, check them for known vulnerabilities, and generate output on findings. Using an intentionally vulnerable application called [OWASP NodeGoat](https://github.com/OWASP/NodeGoat) as a target, this tutorial will walkthrough using two free SCA tools:
 
 - [npm audit](https://docs.npmjs.com/cli/v6/commands/npm-audit): npm is a software registry that developers can interact with using the command line interface (CLI). This CLI includes npm audit, which scans a project for vulnerable dependencies.
-- [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/): An OWASP tool that checks a project's dependencies for publicly disclosed vulnerabilities. If any are found, it generates a report that includes associated Common Vulnerability Enumeration (CVE) identifiers for each finding.
+- [OSV-Scanner](https://osv.dev/): A tool that checks a project's dependencies for publicly disclosed vulnerabilities. If any are found, it generates a report that includes associated Common Vulnerability Enumeration (CVE) identifiers for each finding.
 
 After running each tool, we'll analyze the results.
 
@@ -26,7 +26,7 @@ If you are using a laptop at the SAINTCON AppSec booth, please skip this step an
 These instructions are for using the Linux distribution Ubuntu. If you're using macOS or Windows, please refer to each project's platform specific instructions:
 
 - [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-- [OWASP Dependency-Check](https://jeremylong.github.io/DependencyCheck/dependency-check-cli/index.html)
+- [OSV-Scanner](https://google.github.io/osv-scanner/installation/)
 
 For simplicity, this walkthrough will use the Downloads and Documents directories as destinations for the target code and SCA tools. For best practice recommendations on locations and environment variables, please refer to the above URLs.
 
@@ -68,26 +68,24 @@ cd /home/{your username here}/Documents/appsec
 git clone https://github.com/OWASP/NodeGoat.git
 ```
 
-### Step 1.3 - Setup OWASP Dependency-Check
+### Step 1.3 - Setup OSV-Scanner
 
-1. Check whether the current version of Java is installed:
-
-```
-java -version
-```
-
-2. Install Java:
+1. Check whether the current version of Go is installed:
 
 ```
-sudo apt install default-jre
+go version
 ```
 
-2. Download [OWASP Dependency-Check](https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip) to your Downloads directory using either a browser or using a command line tool like curl.
-
-3. Unzip the downloaded file:
+2. Install Go:
 
 ```
-unzip /home/{your username here}/Downloads/dependency-check-8.4.0-release.zip
+sudo apt install golang-go
+```
+
+2. Install OSV Dependency-Check:
+
+```
+go install github.com/google/osv-scanner/cmd/osv-scanner@v1
 ```
 
 ## Step 2 - Run the SCA tools
@@ -112,25 +110,19 @@ npm audit
 117 vulnerabilities (3 low, 31 moderate, 56 high, 27 critical)
 ```
 
-### Step 2.1 - Run OWASP Dependency-Check
+### Step 2.1 - Run OSV-Scanner
 
-1. Switch to the Dependency-Check bin directory:
-
-```
-cd /home/{your username here}/Downloads/dependency-check/bin/
-```
-
-2. Run Dependency-Check against the local NodeGoat project:
+1. Run OSV-Scanner recursively against the local NodeGoat project directory:
 
 ```
-./dependency-check.sh --project nodegoat --scan /home/{your username here}/Documents/appsecNodeGoat/
+osv-scanner -r /home/{your username here}/Documents/appsec/NodeGoat
 ```
 
-3. Review the results by opening the "dependency-check-report.html" file generated in the bin directory. Notice that the report begins with high level details in the "Scan Information" section, then provides more details in the "Summary" and "Dependencies" sections.
+3. Review the results. The default output will be a human readable table in your terminal with links to OSVs definition of the discovered vulnerabilites. You can explicitly choose a format for the output, OSV supports markdown, JSON, and SARIF. 
 
 ### Step 2.2 - Compare the results
 
-1. Notice that npm audit and Dependency-Check return different finding counts. From viewing the reports, what do you notice different between them?
+1. Notice that npm audit and OSV-Scanner return different finding counts. From viewing the reports, what do you notice different between them?
 
 ## Step 3 - Fix vulnerabilities
 
@@ -140,7 +132,7 @@ Before running this in an actual development environment, consult with the devel
 
 For more context on managing vulnerable dependencies, please refer to the [OWASP Vulnerable Dependency Management Cheat Sheet.](https://cheatsheetseries.owasp.org/cheatsheets/Vulnerable_Dependency_Management_Cheat_Sheet.html)
 
-### Step 2.1 - Run npm audit fix
+### Step 3.1 - Run npm audit fix
 
 1. Switch back to the NodeGoat directory using the command from Step 2.1.1 and run [npm audit fix](https://docs.npmjs.com/cli/v10/commands/npm-audit):
 
@@ -153,3 +145,8 @@ npm audit fix
 ```
 100 vulnerabilities (3 low, 29 moderate, 46 high, 22 critical)
 ```
+
+
+### Step 3.2 - Alternatively, Run OSV-Scanner Guided Remediation
+
+OSV-Scanner has experimental remediation features that can be explored [here.] (https://google.github.io/osv-scanner/experimental/guided-remediation/)
