@@ -66,7 +66,8 @@ One thing to note from the results is that the scan is attempting to analyze all
 
 Given that VTM is a Django/Python application, we can scan specifically for known Django issues from the Semgrep registry (https://semgrep.dev/r). This is accomplished by running the following command:
 
-* `semgrep scan --config "p/django" vtm`
+* `cd vtm`
+* `semgrep scan --config "p/django"`
 
 ```
 ┌──────────────┐
