@@ -85,9 +85,9 @@ Ran 29 rules on 44 files: 12 findings.
 
 As with any automated tool, false positives are a possibility. Before adding SAST findings to the development backlog, we need to review and confirm the issues.
 
-By default, Semgrep outputs findings to the terminal. These results can be saved to a file by specifying `-o out-file` at the end of the command.
+By default, Semgrep outputs findings to the terminal. These results can be saved to a file by specifying `semgrep -o out-file` at the end of the command.
 
-In this case, we will review a SQL Injection finding. Semgrep gives us the following finding from the _vtm/taskManager/views.py_ source file:
+In this case, we will review a SQL Injection finding. Scolling up you will see Semgrep provides a reference for which file the finding was located in `taskManager/views.py`. Semgrep gives us the following finding from the _vtm/taskManager/views.py_ source file:
 
 ```
        python.django.security.audit.raw-query.avoid-raw-sql                              
@@ -102,7 +102,7 @@ In this case, we will review a SQL Injection finding. Semgrep gives us the follo
 
 ```
 
-While this is a good start, we also want to confirm the issues through source code inspection. Opening up the _views.py_ file we find that the call to `User.objects.raw` is found within the `forgot_password` function and does indeed take user input directly from the `email` parameter.
+While this is a good start, we also want to confirm the issues through source code inspection. Opening up the _views.py_ file (located here: https://github.com/redpointsec/vtm/blob/main/taskManager/views.py , line# 805) we find that the call to `User.objects.raw` is found within the `forgot_password` function and does indeed take user input directly from the `email` parameter.
 
 ```python
 @csrf_exempt
