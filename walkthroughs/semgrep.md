@@ -70,7 +70,7 @@ One thing to note from the results is that the scan is attempting to analyze all
 Given that VTM is a Django/Python application, we can scan specifically for known Django issues from the Semgrep registry (https://semgrep.dev/r). This is accomplished by running the following command:
 
 * `cd saintcon-appsec-challenge-2023`
-* `semgrep scan --config "p/django"`
+* `semgrep scan --config "p/flask"`
 
 ```
 ┌──── ○○○ ────┐
@@ -78,14 +78,11 @@ Given that VTM is a Django/Python application, we can scan specifically for know
 └─────────────┘
 
                                                                                      
-Scanning 59 files (only git-tracked) with 28 Code rules:
+Scanning 59 files (only git-tracked) with 17 Code rules:
             
   CODE RULES
-                                                                                     
-  Language      Rules   Files          Origin      Rules                             
- ─────────────────────────────        ───────────────────                            
-  python           27      17          Community      28                             
-  <multilang>       1       9                                                        
+  Scanning 17 files with 17 python rules.
+
                                        
 ...
 
@@ -95,10 +92,11 @@ Scanning 59 files (only git-tracked) with 28 Code rules:
 └──────────────┘
 Some files were skipped or only partially analyzed.
   Scan was limited to files tracked by git.
-  Scan skipped: 13 files matching .semgrepignore patterns
+  Scan skipped: 12 files matching .semgrepignore patterns
   For a full list of skipped files, run semgrep with the --verbose flag.
 
-Ran 28 rules on 26 files: 3 findings.
+Ran 17 rules on 17 files: 1 finding.
+
 
 ```
 
@@ -113,7 +111,7 @@ In this case, we will review a SQL Injection finding that was identified with th
 * `cd saintcon-appsec-challenge-2023`
 * `semgrep scan --config auto .`
 
- Scolling up you will see Semgrep provides a reference for which file the finding was located in. Here we see: `memeapp/controllers/users.py`. Semgrep gives us the following finding from the [_memeapp/controllers/users.py_](https://github.com/smanesse/saintcon-appsec-challenge-2023/blob/main/memeapp/controllers/users.py) source file: 
+ Scolling up you will see Semgrep provides a reference for which file the finding was located in. Semgrep gives us the following finding from the [_memeapp/controllers/users.py_](https://github.com/smanesse/saintcon-appsec-challenge-2023/blob/main/memeapp/controllers/users.py) source file: 
 
 ```
 python.django.security.injection.tainted-sql-
@@ -139,47 +137,32 @@ python.django.security.injection.tainted-sql-
                one=True)
 ```
 
-While this is a good start, we also want to confirm the issues through source code inspection. Opening up the _views.py_ file (located here: https://github.com/redpointsec/vtm/blob/main/taskManager/views.py , line# 805) we find that the call to `User.objects.raw` is found within the `forgot_password` function and does indeed take user input directly from the `email` parameter.
+While this is a good start, we also want to confirm the issues through source code inspection. Opening up the   [_memeapp/controllers/users.py_](https://github.com/smanesse/saintcon-appsec-challenge-2023/blob/main/memeapp/controllers/users.py) source file: , line# 15 we find that the  'user' query takes input from the user captured in the 'username' field and inserts it directly into the 'user' query. A classic example of a SQL injection vulnerability.
 
 ```python
-@csrf_exempt
-def forgot_password(request):
-            
-    if request.method == 'POST':
-        t_email = request.POST.get('email')
-    
-        try:
-            result = User.objects.raw("SELECT * FROM auth_user where email = '%s'" % t_email)
+@bp.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return redirect("/")
+    username = request.form.get("username", None)
+    password = request.form.get("password", None)
+    user = db_query(f"SELECT rowid, password_hash FROM users WHERE username='{username}'", one=True)
+    if user:
+        user_id = user[0]
+        password_hash = user[1]
+        if cryptoutils.check_password(password, password_hash):
+            response = redirect("/")
+            set_session_token(user_id, response)
+            return response
+        else:
+            return redirect("/login?error=Invalid+login")
+    else:
+        return redirect("/login?error=Invalid+login")
 
-            if len(list(result)) > 0:
-                reset_user = result[0]
-                # Generate secure random 6 digit number
-                res = ""
-                nums = [x for x in os.urandom(6)]
-                for x in nums:
-                    res = res + str(x)
-                   
-                reset_token = res[:6]
-                reset_user.userprofile.reset_token = reset_token
-                reset_user.userprofile.reset_token_expiration = timezone.now() + datetime.timedelta(minutes=10)
-                reset_user.userprofile.save()
-                reset_user.save()
-        
-                #reset_user.email_user(
-                        #"Reset your password",
-                        #"You can reset your password at /taskManager/reset_password/. Use \"{}\" as your token. This link will only work for 10 minutes.".format(reset_token))
-
-                messages.success(request, 'Check your email for a reset token')
-                return redirect('/taskManager/reset_password')
-            else:
-                messages.warning(request, 'Check your email for a reset token')
-        except User.DoesNotExist:
-            messages.warning(request, 'Check your email for a reset token')
-
-    return render(request, 'taskManager/forgot_password.html')
 ```
+
 
 ## Resources
 
 - [Semgrep](https://semgrep.dev/) - Static Analysis Tool used to identify security issues in source code
-- [Vulnerable Task Manager](https://github.com/redpointsec/vtm) - Intentionally vulnerable application we will target during this walkthrough.
+- [MemeApp](https://github.com/smanesse/saintcon-appsec-challenge-2023/tree/main) - Intentionally vulnerable application we will target during this walkthrough.
