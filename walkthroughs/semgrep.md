@@ -25,15 +25,16 @@ If you get message `semgrep not found`, flag down a volunteer so they can correc
 Now that we know semgrep is installed and available, open up a terminal window and make sure the `vtm` source code is included in the current user's home folder:
 
 ```
-cd vtm
+cd saintcon-appsec-challenge-2023
 ```
 
-If this folder does not exist, clone vtm from GitHub using the command `git clone https://github.com/redpointsec/vtm`.
+If this folder does not exist, clone vtm from GitHub using the command `git clone https://github.com/smanesse/saintcon-appsec-challenge-2023`.
 
 ## Step 2 - Run a SAST scan
 
 Now that we have the code and tool available, run a scan using the default rules from the Semgrep team as follows: 
 
+* `cd saintcon-appsec-challenge-2023`
 * `semgrep scan --config auto .`
 
 This will run analysis on the source code files that exist in the targeted directory and output something similar to the following:
@@ -43,7 +44,8 @@ This will run analysis on the source code files that exist in the targeted direc
 │ Semgrep CLI │               
 └─────────────┘               
                               
-Scanning 129 files (only git-tracked) with:
+Scanning 59 files (only git-tracked) with:
+
                                       
 ...
                     
@@ -52,11 +54,12 @@ Scanning 129 files (only git-tracked) with:
 └──────────────┘
 Some files were skipped or only partially analyzed.
   Scan was limited to files tracked by git.
-  Partially scanned: 3 files only partially analyzed due to parsing or internal Semgrep errors
-  Scan skipped: 8 files matching .semgrepignore patterns
+  Partially scanned: 5 files only partially analyzed due to parsing or internal Semgrep errors
+  Scan skipped: 13 files matching .semgrepignore patterns
   For a full list of skipped files, run semgrep with the --verbose flag.
 
-Ran 1094 rules on 121 files: 47 findings.
+Ran 471 rules on 46 files: 10 findings.
+
 
 ```
 
@@ -66,19 +69,37 @@ One thing to note from the results is that the scan is attempting to analyze all
 
 Given that VTM is a Django/Python application, we can scan specifically for known Django issues from the Semgrep registry (https://semgrep.dev/r). This is accomplished by running the following command:
 
-* `cd vtm`
+* `cd saintcon-appsec-challenge-2023`
 * `semgrep scan --config "p/django"`
 
 ```
+┌──── ○○○ ────┐
+│ Semgrep CLI │
+└─────────────┘
+
+                                                                                     
+Scanning 59 files (only git-tracked) with 28 Code rules:
+            
+  CODE RULES
+                                                                                     
+  Language      Rules   Files          Origin      Rules                             
+ ─────────────────────────────        ───────────────────                            
+  python           27      17          Community      28                             
+  <multilang>       1       9                                                        
+                                       
+...
+
+
 ┌──────────────┐
 │ Scan Summary │
 └──────────────┘
 Some files were skipped or only partially analyzed.
   Scan was limited to files tracked by git.
-  Scan skipped: 8 files matching .semgrepignore patterns
+  Scan skipped: 13 files matching .semgrepignore patterns
   For a full list of skipped files, run semgrep with the --verbose flag.
 
-Ran 29 rules on 44 files: 12 findings.
+Ran 28 rules on 26 files: 3 findings.
+
 ```
 
 ## Step 4 - Review Output
@@ -87,19 +108,35 @@ As with any automated tool, false positives are a possibility. Before adding SAS
 
 By default, Semgrep outputs findings to the terminal. These results can be saved to a file by specifying `semgrep -o out-file` at the end of the command.
 
-In this case, we will review a SQL Injection finding. Scolling up you will see Semgrep provides a reference for which file the finding was located in `taskManager/views.py`. Semgrep gives us the following finding from the _vtm/taskManager/views.py_ source file:
+In this case, we will review a SQL Injection finding that was identified with the first command.
+
+* `cd saintcon-appsec-challenge-2023`
+* `semgrep scan --config auto .`
+
+ Scolling up you will see Semgrep provides a reference for which file the finding was located in. Here we see: `memeapp/controllers/users.py`. Semgrep gives us the following finding from the [_memeapp/controllers/users.py_](https://github.com/smanesse/saintcon-appsec-challenge-2023/blob/main/memeapp/controllers/users.py) source file: 
 
 ```
-       python.django.security.audit.raw-query.avoid-raw-sql                              
-          Detected the use of 'RawSQL' or 'raw' indicating the execution of a non-parameterized SQL
-          query. This could lead to a SQL injection and therefore protected information could be   
-          leaked. Instead, use Django ORM and parameterized queries before raw SQL. An example of  
-          using the Django ORM is: `People.objects.get(name='Bob')`                                
-          Details: https://sg.run/weDA                                                             
-                                                                                                   
-          812┆ result = User.objects.raw("SELECT * FROM auth_user where email = '%s'" % t_email)
-            ⋮┆----------------------------------------
-
+python.django.security.injection.tainted-sql-
+       string.tainted-sql-string                    
+          Detected user input used to manually   
+          construct a SQL string. This is usually
+          bad practice because manual            
+          construction could accidentally result 
+          in a SQL injection. An attacker could  
+          use a SQL injection to steal or modify 
+          contents of the database. Instead, use 
+          a parameterized query which is         
+          available by default in most database  
+          engines. Alternatively, consider using 
+          the Django object-relational mappers   
+          (ORM) instead of raw SQL queries.      
+          Details: https://sg.run/PbZp           
+                                                 
+           15┆ user = db_query(f"SELECT 
+               rowid, password_hash FROM
+               users WHERE              
+               username='{username}'",  
+               one=True)
 ```
 
 While this is a good start, we also want to confirm the issues through source code inspection. Opening up the _views.py_ file (located here: https://github.com/redpointsec/vtm/blob/main/taskManager/views.py , line# 805) we find that the call to `User.objects.raw` is found within the `forgot_password` function and does indeed take user input directly from the `email` parameter.
